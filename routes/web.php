@@ -11,6 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', "IndexController@index");
+
+Route::get('/product/{id?}', "ProductController@index");
+Route::get('/product_list/{id?}', "ProductController@list");
