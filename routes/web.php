@@ -11,7 +11,14 @@
 |
 */
 
-Route::get('/', "IndexController@index");
+Route::get( '/', "IndexController@index" );
+Route::get( '/addForm/{id}', "IndexController@addForm" );
+Route::post( '/addList', "IndexController@addList" );
 
-Route::get('/product/{id?}', "ProductController@index");
-Route::get('/product_list/{id?}', "ProductController@list");
+Route::group( ['prefix' => 'product'], function () {
+	Route::get( '/{id?}', "ProductController@index" )->where( ["id" => '[0-9]+'] );
+	Route::get( '/list/{code?}', "ProductController@list" );
+	Route::get( '/addForm/{code}', "ProductController@addForm" );
+	Route::post( '/addList', "ProductController@addList" );
+} );
+

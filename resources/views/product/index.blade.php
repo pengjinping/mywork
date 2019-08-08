@@ -24,7 +24,8 @@
                 <td>{{$dataItem['market']}}</td>
                 <td>{{$dataItem['profit']}}</td>
                 <td>{{ intval($dataItem['rate']) / 100}}%</td>
-                <td><a href="/product_list/{{$dataItem['code']}}">明细</a></td>
+                <td><a href="/product/list/{{$dataItem['code']}}">明细</a></td>
+                <td><a href="/product/addForm/{{$dataItem['code']}}">明细</a></td>
             </tr>
         @endforeach
     @else

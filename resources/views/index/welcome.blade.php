@@ -24,7 +24,7 @@
                 <td>{{$dataItem['profit']}}</td>
                 <td>{{ intval($dataItem['rate']) / 100}}%</td>
                 <td><a href="/product/{{$dataItem['id']}}">明细</a></td>
-                <td><a href="/addChannel">添加</a></td>
+                <td><a href="/addForm/{{$dataItem['id']}}">添加</a></td>
             </tr>
         @endforeach
     @else

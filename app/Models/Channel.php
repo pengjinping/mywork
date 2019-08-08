@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
  * App\Models\Channel
  * @property int $id
  * @property string $name
+ * @property float $go_in
+ * @property float $go_out
+ * @property float $capital
+ * @property float $balance
+ * @property float $market
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel query()
@@ -16,8 +21,15 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     protected $table = 'channel';
-
-    public static function getList(){
-        return static::query()->get()->toArray();
-    }
+	
+	public static function getList()
+	{
+		$dataList = static::query()->get()->toArray();
+		foreach ( $dataList as &$item ) {
+			$item['profit'] = $item['balance'] + $item['market'] - $item['capital'];
+			$item['rate']   = $item['capital'] > 0 ? ( $item['profit'] / $item['capital'] ) * 10000 : 0;
+		}
+		
+		return $dataList;
+	}
 }
