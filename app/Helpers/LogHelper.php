@@ -20,7 +20,7 @@ class LogHelper
 		
 		self::$fileName = storage_path( 'logs/' . $name );
 		if ( !is_dir( $dirName = dirname( self::$fileName ) ) ) {
-			mkdir( iconv( "UTF-8", "GBK", $dirName ), 0777, true );
+			mkdir($dirName, 0777, true );
 		}
 	}
 	
