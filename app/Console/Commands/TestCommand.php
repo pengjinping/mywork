@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\MailHelper;
 use App\Models\Channel;
 use Illuminate\Console\Command;
 
@@ -38,6 +39,7 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        Channel::getList();
+        //MailHelper::sendText('584673212@qq.com', 'a123', 'Hello world');
+	    MailHelper::sendTemp('text', '584673212@qq.com', 'a123', 'Hello world');
     }
 }
