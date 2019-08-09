@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+    	echo date("Y-m-d H:i:s") . PHP_EOL;
     	$schedule->command('summary:run')->cron('* 9-15 * * *');
 	    $schedule->command('summary:day')->cron('15 0 * * *');
 	    $schedule->command('summary:week')->cron('0 8 * * 1');
