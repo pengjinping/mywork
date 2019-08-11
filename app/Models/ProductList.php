@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\DB;
 class ProductList extends Model
 {
     protected $table = "product_list";
-	
+
+    protected $fillable = ['channel_id', 'code', 'type', 'amount', 'part', 'hand', 'change_after', 'date'];
+
 	const TYPE_IN  = 1; //购买
 	const TYPE_OUT = 0; //赎回
 	
@@ -24,11 +26,11 @@ class ProductList extends Model
 		self::TYPE_IN  => '购买',
 		self::TYPE_OUT => '赎回'
 	];
-	
-	public static function getList( $code )
-	{
-		return static::query()->where( 'code', $code )->get()->toArray();
-	}
+
+    public static function getList($code)
+    {
+        return static::query()->where(['code' => $code])->orderBy('id', 'desc')->get()->toArray();
+    }
 	
 	/**
 	 * 创建一个记录新
@@ -37,25 +39,34 @@ class ProductList extends Model
 	 */
 	public static function createOne( $params )
 	{
-		try{
-			$product = Product::findOrFail( $params['code'] );
-			
-			if ( $params['type'] == static::TYPE_IN ) {
-				$product->amount   += $params['amount'];
-			} else {
-				$product->amount  -= $params['amount'];
-			}
-			
-			$params['change_after'] = $product->amount;
+        try {
+
+            $channel = Channel::findOrFail($params['channel_id']);
+            $product = Product::getOneByCode($params['code']);
+
+            if ($params['type'] == static::TYPE_IN) {
+                $channel['balance'] = $channel['balance'] - $params['amount'] - $params['hand'];
+                $product['amount']  += $params['amount'];
+                $product['part']    += $params['part'];
+            } else {
+                $channel['balance'] = $channel['balance'] + $params['amount'] - $params['hand'];
+                $product['amount']  -= $params['amount'];
+                $product['part']    -= $params['part'];
+            }
+            $product['market'] = $product['part'] * $product['price'];
+
+			$params['change_after'] = $product['amount'];
 			$params['date'] = date('Y-m-d');
-			
-			$channelSer = new static();
-			$channelSer->fill($params);
-			
-			DB::transaction( function () use ( $channelSer, $product ) {
-				$channelSer->save();
-				$product->save();
-			} );
+
+            unset($params['_token'], $params['channel_id']);
+            $dataSer = new static();
+            $dataSer->fill($params);
+
+            DB::transaction(function () use ($channel, $dataSer, $product) {
+                $channel->save();
+                $dataSer->save();
+                $product->save();
+            });
 			
 		}catch (\Throwable $ex){
 			dd($ex);

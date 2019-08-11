@@ -7,7 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\ChannelList
-
+ * @property int $id
+ * @property integer $channel_id
+ * @property int $type
+ * @property float $amount
+ * @property float $change_after
+ * @property date $date
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Channel query()
@@ -16,6 +21,8 @@ use Illuminate\Support\Facades\DB;
 class ChannelList extends Model
 {
     protected $table = 'channel_list';
+
+    protected $fillable = ['channel_id', 'type', 'amount', 'change_after', 'date'];
 	
 	const TYPE_IN  = 1; //充值
 	const TYPE_OUT = 0; //取出
@@ -33,21 +40,23 @@ class ChannelList extends Model
 	public static function createOne( $params )
 	{
 		try{
+		    unset($params['_token']);
+
 			$channel = Channel::findOrFail( $params['channel_id'] );
 			
 			if ( $params['type'] == static::TYPE_IN ) {
-				$channel->go_in   += $params['amount'];
-				$channel->capital += $params['amount'];
-				$channel->balance += $params['amount'];
+				$channel['go_in']   += $params['amount'];
+				$channel['capital'] += $params['amount'];
+				$channel['balance'] += $params['amount'];
 			} else {
-				$channel->go_out  += $params['amount'];
-				$channel->capital -= $params['amount'];
-				$channel->balance -= $params['amount'];
+				$channel['go_out']  += $params['amount'];
+				$channel['capital'] -= $params['amount'];
+				$channel['balance'] -= $params['amount'];
 			}
 			
-			$params['change_after'] = $channel->capital;
+			$params['change_after'] = $channel['capital'];
 			$params['date'] = date('Y-m-d');
-			
+
 			$channelSer = new static();
 			$channelSer->fill($params);
 	

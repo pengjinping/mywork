@@ -17,6 +17,7 @@ Route::post( '/addList', "IndexController@addList" );
 
 Route::group( ['prefix' => 'product'], function () {
 	Route::get( '/{id?}', "ProductController@index" )->where( ["id" => '[0-9]+'] );
+    Route::get( '/add', "ProductController@add" );
 	Route::get( '/list/{code?}', "ProductController@list" );
 	Route::get( '/addForm/{code}', "ProductController@addForm" );
 	Route::post( '/addList', "ProductController@addList" );

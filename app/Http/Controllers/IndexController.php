@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Commands\SummaryDayCommand;
+use App\Console\Commands\SummaryRunCommand;
 use App\Models\Channel;
 use App\Models\ChannelList;
 use Illuminate\Http\Request;
@@ -13,9 +15,12 @@ class IndexController extends Controller
 	 */
     public function index()
     {
+        //(new SummaryRunCommand())->handle();
+        //(new SummaryDayCommand())->handle();
+
 	    $dataList = Channel::getList();
 	    
-        return view('index.welcome', ['data' => $dataList]);
+        return view('index.index', ['data' => $dataList]);
     }
 	
 	/**

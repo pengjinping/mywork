@@ -6,8 +6,10 @@
         <th>本金</th>
         <th>余额</th>
         <th>市值</th>
+        <th>总资产</th>
         <th>盈亏</th>
         <th>盈亏率</th>
+        <th>日盈亏</th>
         <th>明细</th>
         <th>添加</th>
     </tr>
@@ -21,8 +23,10 @@
                 <td>{{$dataItem['capital']}}</td>
                 <td>{{$dataItem['balance']}}</td>
                 <td>{{$dataItem['market']}}</td>
+                <td>{{$dataItem['market'] + $dataItem['balance']}}</td>
                 <td>{{$dataItem['profit']}}</td>
                 <td>{{ intval($dataItem['rate']) / 100}}%</td>
+                <td>{{$dataItem['market'] - $dataItem['yestoday']}}</td>
                 <td><a href="/product/{{$dataItem['id']}}">明细</a></td>
                 <td><a href="/addForm/{{$dataItem['id']}}">添加</a></td>
             </tr>
