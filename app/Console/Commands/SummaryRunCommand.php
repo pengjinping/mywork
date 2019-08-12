@@ -41,6 +41,11 @@ class SummaryRunCommand extends Command
     public function handle()
     {
         $this->getGupiao();
+        $this->getJiJin(2);
+        $this->getJiJin(3);
+        $this->getJiJin(4);
+        $this->getJiJin(6);
+        $this->getJiJin(7);
         $this->getKuaikuaiDai();
     }
 
@@ -71,6 +76,35 @@ class SummaryRunCommand extends Command
 
         Channel::where("id", 1)->update($total);
     }
+
+    /**
+     * 获取基金信息
+     */
+    private function getJiJin($channelId){
+        $yesterday = date("Y-m-d", strtotime("-1 day"));
+        // 获取资产数据
+        $query = Product::query()->where('channel_id', $channelId);
+        $query->where(function ($q) use ($yesterday) {
+            $q->where('part', '>', 0)->orWhere('updated_at', '>', $yesterday);
+        });
+        $productData = $query->get();
+
+        $total['market'] = 0;
+        $total['yestoday'] = 0;
+        foreach ($productData as $item) {
+            $resData           = CurlHelper::makeJiJinUrl($item['code']);
+            $total['market']   += $item->market;
+            $total['yestoday'] += $item->yestoday;
+
+            $item->market = $resData['price'] * $item['part'];
+            $item->price  = $resData['price'];
+            $item->yprice = $resData['yprice'];
+            $item->save();
+        }
+
+        Channel::where("id", $channelId)->update($total);
+    }
+
 
     /**
      * 获取股票信息

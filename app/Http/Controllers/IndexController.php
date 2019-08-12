@@ -15,7 +15,7 @@ class IndexController extends Controller
 	 */
     public function index()
     {
-        //(new SummaryRunCommand())->handle();
+        (new SummaryRunCommand())->handle();
         //(new SummaryDayCommand())->handle();
 
 	    $dataList = Channel::getList();

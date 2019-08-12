@@ -21,7 +21,6 @@ class CurlHelper
         }
     }
 
-
     public static function getStock($code)
     {
         $result = self::makeStockUrl($code, 1);
@@ -45,7 +44,7 @@ class CurlHelper
         return json_decode($content, true);
     }
 
-    private static function makeJiJinUrl($code)
+    public static function makeJiJinUrl($code)
     {
         $url     = "http://fundgz.1234567.com.cn/js/{$code}.js";
         $content = file_get_contents($url);
