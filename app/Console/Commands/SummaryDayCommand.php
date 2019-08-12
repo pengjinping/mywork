@@ -44,13 +44,11 @@ class SummaryDayCommand extends Command
         }
 
         // 获取资产数据
-        $oldDate = date("Y-m-d", strtotime("-1 day"));
-        $query   = Product::query()->where('channel_id', 1);
-        $query->where('part', '>', 0)->orWhere('updated_at', '>', $oldDate);
-        $productData = $query->get();
+        $oldDate     = date("Y-m-d", strtotime("-1 day"));
+        $productData = Product::query()->where('part', '>', 0)->get();
 
         foreach ($productData as $item) {
-            ProductLog::createOne($item['code'], $oldDate, $item->market);
+            ProductLog::createOne($item['code'], $oldDate, $item['market']);
             $item->yestoday = $item->market;
             $item->save();
         }

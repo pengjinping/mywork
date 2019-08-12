@@ -43,6 +43,12 @@
                 <input type="text" name="hand" value="" class="layui-input">
             </div>
         </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">昨日余额</label>
+            <div class="layui-input-block">
+                <input type="text" name="yesterday" value="" class="layui-input">
+            </div>
+        </div>
         <div class="layui-inline" style="margin-left: 40px;">
             <input type="submit" class="layui-btn" value="立即提交">
         </div>

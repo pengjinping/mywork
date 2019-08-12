@@ -12,6 +12,10 @@ class CurlHelper
 {
     public static function getInfo($code, $channelId)
     {
+        if ($code == '') {
+            dd("code不可为空");
+        }
+
         if ($channelId == 1) {
             return self::getStock($code);
         } else if($channelId == 11) {

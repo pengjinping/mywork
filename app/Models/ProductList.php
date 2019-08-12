@@ -47,21 +47,27 @@ class ProductList extends Model
             $channel = Channel::findOrFail($params['channel_id']);
             $product = Product::getOneByCode($params['code']);
 
+            if ($params['part'] == 0 && $product['price']) {
+                $params['part'] = round($params['amount'] / $product['price'], 4);
+            }
+
             if ($params['type'] == static::TYPE_IN) {
-                $channel['balance'] = $channel['balance'] - $params['amount'] - $params['hand'];
-                $product['amount']  += $params['amount'];
-                $product['part']    += $params['part'];
+                $channel['balance']  = $channel['balance'] - $params['amount'] - $params['hand'];
+                $product['amount']   += $params['amount'];
+                $product['part']     += $params['part'];
+                $product['yestoday'] += $params['yesterday'] ? : $params['amount'];
             } else {
-                $channel['balance'] = $channel['balance'] + $params['amount'] - $params['hand'];
-                $product['amount']  -= $params['amount'];
-                $product['part']    -= $params['part'];
+                $channel['balance']  = $channel['balance'] + $params['amount'] - $params['hand'];
+                $product['amount']   -= $params['amount'];
+                $product['part']     -= $params['part'];
+                $product['yestoday'] += $params['yesterday'] ? : $params['amount'];
             }
             $product['market'] = $product['part'] * $product['price'];
 
 			$params['change_after'] = $product['amount'];
 			$params['date'] = date('Y-m-d');
 
-            unset($params['_token'], $params['channel_id']);
+            unset($params['_token'], $params['channel_id'], $params['yesterday']);
             $dataSer = new static();
             $dataSer->fill($params);
 

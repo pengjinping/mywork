@@ -40,4 +40,23 @@ class Product extends Model
         $obj->fill($params);
         $obj->save();
     }
+
+    /**
+     * 获取有效资产数据
+     *
+     * @param $channelId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function getListByChannel($channelId)
+    {
+        $yesterday = date("Y-m-d", strtotime("-1 day"));
+
+        $query = Product::query()->where('channel_id', $channelId);
+        $query->where(function ($q) use ($yesterday) {
+            $q->where('part', '>', 0)->orWhere('updated_at', '>', $yesterday);
+        });
+
+        return $query->get();
+    }
 }

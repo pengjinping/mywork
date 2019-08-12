@@ -40,38 +40,34 @@ class SummaryRunCommand extends Command
      */
     public function handle()
     {
-        $this->getGupiao();
-        $this->getJiJin(2);
-        $this->getJiJin(3);
-        $this->getJiJin(4);
-        $this->getJiJin(6);
-        $this->getJiJin(7);
-        $this->getKuaikuaiDai();
+        $this->getShares();
+        $this->getFund(2);
+        $this->getFund(3);
+        $this->getFund(4);
+        $this->getFund(5);
+        $this->getFund(6);
+        $this->getFund(7);
+        $this->getFund(10);
+        $this->getP2P();
     }
 
     /**
      * 获取股票信息
      */
-    private function getGupiao(){
-        $yesterday = date("Y-m-d", strtotime("-1 day"));
-        // 获取资产数据
-        $query = Product::query()->where('channel_id', 1);
-        $query->where(function ($q) use ($yesterday) {
-            $q->where('part', '>', 0)->orWhere('updated_at', '>', $yesterday);
-        });
-        $productData = $query->get();
-
-        $total['market'] = 0;
+    private function getShares()
+    {
+        $total['market']   = 0;
         $total['yestoday'] = 0;
+        $productData       = Product::getListByChannel(1);
         foreach ($productData as $item) {
-            $resData           = CurlHelper::getStock($item['code']);
-            $total['market']   += $item->market;
-            $total['yestoday'] += $item->yestoday;
-
+            $resData      = CurlHelper::getStock($item['code']);
             $item->market = $resData['price'] * $item->part;
             $item->price  = $resData['price'];
             $item->yprice = $resData['yprice'];
             $item->save();
+
+            $total['market']   += $item->market;
+            $total['yestoday'] += $item->yestoday;
         }
 
         Channel::where("id", 1)->update($total);
@@ -82,52 +78,47 @@ class SummaryRunCommand extends Command
 	 *
 	 * @param $channelId
 	 */
-	private function getJiJin( $channelId )
+	private function getFund( $channelId )
 	{
-		$yesterday = date( "Y-m-d", strtotime( "-1 day" ) );
-		// 获取资产数据
-		$query = Product::query()->where( 'channel_id', $channelId );
-		$query->where( function ( $q ) use ( $yesterday ) {
-			$q->where( 'part', '>', 0 )->orWhere( 'updated_at', '>', $yesterday );
-		} );
-		$productData = $query->get();
-		
-		$total['market']   = 0;
-		$total['yestoday'] = 0;
-		foreach ( $productData as $item ) {
-			$resData           = CurlHelper::makeJiJinUrl( $item['code'] );
-			$total['market']   += $item->market;
-			$total['yestoday'] += $item->yestoday;
-			
-			$item->market = $resData['price'] * $item['part'];
-			$item->price  = $resData['price'];
-			$item->yprice = $resData['yprice'];
-			$item->save();
-		}
+        $total['market']   = 0;
+        $total['yestoday'] = 0;
+        $productData       = Product::getListByChannel($channelId);
+        foreach ($productData as $item) {
+            $resData      = CurlHelper::makeJiJinUrl($item['code']);
+            $item->market = $resData['price'] * $item['part'];
+            $item->price  = $resData['price'];
+
+            if ($item->yprice != $resData['yprice']) {
+                $item->yprice   = $resData['yprice'];
+                $item->yestoday = $resData['yprice'] * $item['part'];
+            }
+            $item->save();
+
+            $total['market']   += $item->market;
+            $total['yestoday'] += $item->yestoday;
+        }
 		
 		Channel::where( "id", $channelId )->update( $total );
 	}
-    
+
     /**
      * 获取股票信息
      */
-    private function getKuaikuaiDai(){
-        // 获取资产数据
-        $query = Product::query()->where('channel_id', 11);
-        $productData = $query->get();
+    private function getP2P()
+    {
 
         $total['market']   = 0;
         $total['yestoday'] = 0;
+        $productData       = Product::getListByChannel(11);
         foreach ($productData as $item) {
-            $resData           = CurlHelper::kuaiKuaiDai();
-            $total['market']   += $item->market;
-            $total['yestoday'] += $item->yestoday;
-
-
+            $resData      = CurlHelper::kuaiKuaiDai();
             $item->market = $item->yestoday + ($resData['price'] - $resData['yprice']) * $item->part;
             $item->price  = $resData['price'];
             $item->yprice = $resData['yprice'];
             $item->save();
+
+            $total['market']   += $item->market;
+            $total['yestoday'] += $item->yestoday;
         }
 
         Channel::where("id", 11)->update($total);
