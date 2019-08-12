@@ -35,7 +35,7 @@
                 <td>{{$dataItem['profit']}}</td>
                 <td>{{ intval($dataItem['rate']) / 100}}%</td>
                 <td>{{$dataItem['profit_today']}}</td>
-                <td>{{ intval($dataItem['rate_today']) / 100}}%</td>
+                <td>{{ round($dataItem['rate_today']) / 100}}%</td>
                 <td><a href="/product/list/{{$dataItem['code']}}">明细</a></td>
                 <td><a href="/product/addForm/{{$dataItem['code']}}">操作</a></td>
             </tr>
@@ -50,5 +50,5 @@
 </table>
 <h3 style="text-align:center">共计投资本金：{{$total['amount']}}, 目前市值: {{ $total['market'] }},
 盈亏金额： {{ $total['profit'] }}, 盈亏率：{{ intval($total['rate']) / 100}}%，
-今日盈亏：{{ $total['yesterday'] }}</h3>
+今日盈亏：{{ round($total['yesterday'], 2) }}</h3>
 </html>

@@ -25,8 +25,8 @@
                 <td>{{$dataItem['market']}}</td>
                 <td>{{$dataItem['market'] + $dataItem['balance']}}</td>
                 <td>{{$dataItem['profit']}}</td>
-                <td>{{ intval($dataItem['rate']) / 100}}%</td>
-                <td>{{$dataItem['market'] - $dataItem['yestoday']}}</td>
+                <td>{{ round($dataItem['rate']) / 100}}%</td>
+                <td>{{ round($dataItem['market'] - $dataItem['yestoday'],2)}}</td>
                 <td><a href="/product/{{$dataItem['id']}}">明细</a></td>
                 <td><a href="/addForm/{{$dataItem['id']}}">添加</a></td>
             </tr>

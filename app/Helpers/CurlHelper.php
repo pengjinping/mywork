@@ -10,6 +10,18 @@ namespace App\Helpers;
 
 class CurlHelper
 {
+    public static function getInfo($code, $channelId)
+    {
+        if ($channelId == 1) {
+            return self::getStock($code);
+        } else if($channelId == 11) {
+            return self::kuaiKuaiDai();
+        } else {
+            return self::makeJiJinUrl($code);
+        }
+    }
+
+
     public static function getStock($code)
     {
         $result = self::makeStockUrl($code, 1);
@@ -32,4 +44,28 @@ class CurlHelper
 
         return json_decode($content, true);
     }
+
+    private static function makeJiJinUrl($code)
+    {
+        $url     = "http://fundgz.1234567.com.cn/js/{$code}.js";
+        $content = file_get_contents($url);
+        $content = substr($content, 8, -2);
+        $content = json_decode($content, true);
+
+        $res['name']   = $content['name'];
+        $res['yprice'] = $content['dwjz'];
+        $res['price']  = $content['gsz'];
+
+        return $res;
+    }
+
+    public static function kuaiKuaiDai()
+    {
+        $res['name']   = "快快贷";
+        $res['yprice'] = "1";
+        $res['price']  = "1.00032";
+
+        return $res;
+    }
+
 }

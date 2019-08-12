@@ -21,7 +21,7 @@ class ProductController extends Controller
             $total['yesterday'] += $item['yestoday'];
             $item['profit']       = round($item['market'] - $item['amount'], 2);
             $item['rate']         = $item['amount'] > 0 ? ($item['profit'] / $item['amount']) * 10000 : 0;
-            $item['profit_today'] = $item['market'] - $item['yestoday'];
+            $item['profit_today'] = round($item['market'] - $item['yestoday'], 2);
             $item['rate_today']   = $item['amount'] > 0 ? ($item['profit_today'] / $item['market']) * 10000 : 0;
         }
 
@@ -35,8 +35,9 @@ class ProductController extends Controller
     public function add(Request $request)
     {
         $params  = $request->all();
-        $resData = CurlHelper::getStock($params['code']);
+        $resData = CurlHelper::getInfo($params['code'], $params['channel_id']);
         $params  += $resData;
+
         Product::addOne($params);
 
         return redirect('/product/' . $params['channel_id']);
