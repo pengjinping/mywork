@@ -26,9 +26,12 @@ class Product extends Model
         return static::query()->where("channel_id", $id)->get()->toArray();
     }
 
-    public static function getOneByCode($code)
+    public static function getOneByCode($code, $id = '')
     {
-        return static::query()->where(['code' => $code])->firstOrFail();
+        $query = static::query()->where(['code' => $code]);
+        $id && $query->where("channel_id", $id);
+
+        return $query->firstOrFail();
     }
 
     public static function addOne($params)

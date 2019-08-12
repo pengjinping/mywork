@@ -24,11 +24,13 @@ class Channel extends Model
 	
 	public static function getList()
 	{
-		$dataList = static::query()->get()->toArray();
-		foreach ( $dataList as &$item ) {
-			$item['profit'] = $item['balance'] + $item['market'] - $item['capital'];
-			$item['rate']   = $item['capital'] > 0 ? ( $item['profit'] / $item['capital'] ) * 10000 : 0;
-		}
+        $dataList = static::query()->get()->toArray();
+        foreach ($dataList as &$item) {
+            $item['market_balance'] = round($item['balance'] + $item['market'], 2);
+            $item['profit']         = round($item['balance'] + $item['market'] - $item['capital'], 2);
+            $item['rate']           = $item['capital'] > 0 ? round(($item['profit'] / $item['capital']) * 100, 2) : 0;
+            $item['today']          = round($item['market'] - $item['yestoday'], 2);
+        }
 		
 		return $dataList;
 	}

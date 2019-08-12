@@ -27,9 +27,12 @@ class ProductList extends Model
 		self::TYPE_OUT => '赎回'
 	];
 
-    public static function getList($code)
+    public static function getList($code, $id)
     {
-        return static::query()->where(['code' => $code])->orderBy('id', 'desc')->get()->toArray();
+        $query = static::query()->where(['code' => $code]);
+        //$id && $query->where("channel_id", $id);
+
+        return $query->orderBy('id', 'desc')->get()->toArray();
     }
 	
 	/**

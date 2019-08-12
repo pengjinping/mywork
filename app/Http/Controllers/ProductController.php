@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\CurlHelper;
 use App\Models\Product;
 use App\Models\ProductList;
+use App\Models\ProductLog;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -20,9 +21,9 @@ class ProductController extends Controller
             $total['market']    += $item['market'];
             $total['yesterday'] += $item['yestoday'];
             $item['profit']       = round($item['market'] - $item['amount'], 2);
-            $item['rate']         = $item['amount'] > 0 ? ($item['profit'] / $item['amount']) * 10000 : 0;
+            $item['rate']         = $item['amount'] > 0 ? round(($item['profit'] / $item['amount']) * 100,2) : 0;
             $item['profit_today'] = round($item['market'] - $item['yestoday'], 2);
-            $item['rate_today']   = $item['amount'] > 0 ? ($item['profit_today'] / $item['market']) * 10000 : 0;
+            $item['rate_today']   = $item['yestoday'] > 0 ? round(($item['profit_today'] / $item['yestoday']) * 100, 2) : 0;
         }
 
         $total['profit']    = round($total['market'] - $total['amount'], 2);
@@ -43,29 +44,21 @@ class ProductController extends Controller
         return redirect('/product/' . $params['channel_id']);
     }
 
-	public function list( $code )
-	{
-		$dataList = ProductList::getList( $code );
-
-		return view( 'product.list', ['data' => $dataList] );
-	}
-	
-	/**
-	 * 添加转入转出记录
-	 *
-	 * @param $code
-	 *
-	 * @return mixed
-	 */
-	public function addForm( $code )
+	public function list(Request $request, $code )
 	{
         try {
-            $product = Product::getOneByCode($code);
+            $id = $request->input('id');
+            $dataList = ProductList::getList( $code, $id);
+            foreach ($dataList as &$item){
+                $item['type_name'] = ProductList::$TYPE_MAP[$item['type']];
+            }
 
-            return view('product.form', ['data' => $product]);
+            $product = Product::getOneByCode($code, $id);
         } catch (\Throwable $ex) {
             dd($ex);
         }
+
+		return view( 'product.list', ['data' => $dataList, 'product' => $product] );
 	}
 
     /**

@@ -1,43 +1,37 @@
-<html>
-<table width="95%">
-    <thead>
-    <tr>
-        <th>名称</th>
-        <th>本金</th>
-        <th>余额</th>
-        <th>市值</th>
-        <th>总资产</th>
-        <th>盈亏</th>
-        <th>盈亏率</th>
-        <th>日盈亏</th>
-        <th>明细</th>
-        <th>添加</th>
-    </tr>
-    </thead>
+@include("header")
 
-    <tbody style="text-align: center">
-    @if(!empty($data))
-        @foreach($data as $dataItem)
-            <tr>
-                <td>{{$dataItem['name']}}</td>
-                <td>{{$dataItem['capital']}}</td>
-                <td>{{$dataItem['balance']}}</td>
-                <td>{{$dataItem['market']}}</td>
-                <td>{{$dataItem['market'] + $dataItem['balance']}}</td>
-                <td>{{ round($dataItem['profit'], 2)}}</td>
-                <td>{{ round($dataItem['rate']) / 100}}%</td>
-                <td>{{ round($dataItem['market'] - $dataItem['yestoday'],2)}}</td>
-                <td><a href="/product/{{$dataItem['id']}}">明细</a></td>
-                <td><a href="/addForm/{{$dataItem['id']}}">添加</a></td>
-            </tr>
-        @endforeach
-    @else
-        <tr>
-            <td rowspan="8"></td>
-        </tr>
-    @endif
-    </tbody>
+<table class="layui-hide" id="channelList"></table>
 
-</table>
+<script type="text/javascript">
+    layui.use('table', function() {
+        var table = layui.table;
 
-</html>
+        //展示已知数据
+        table.render({
+            elem: '#channelList',
+            title: '资产渠道表',
+            totalRow: true,
+            cols: [[ //标题栏
+                {field: 'id', title: 'ID', width: 80, sort: true, totalRowText: '合计'},
+                {field: 'name', title: '名称', width: 120},
+                {field: 'capital', title: '本金', sort: true, totalRow: true},
+                {field: 'balance', title: '余额', totalRow: true},
+                {field: 'market', title: '市值', sort: true, totalRow: true},
+                {field: 'market_balance', title: '总资产', sort: true, totalRow: true},
+                {field: 'profit', title: '盈亏', sort: true, totalRow: true},
+                {field: 'rate', title: '盈亏率(%)'},
+                {field: 'today', title: '日盈亏', sort: true, totalRow: true},
+                {
+                    field: 'id', title: '操作', templet: function (res) {
+                        return '<a href="/product/' + res.id + '">明细</a> | ' +
+                            '<a href="/addForm/' + res.id + '">添加</a>';
+                    }
+                },
+            ]],
+            data: <?php echo json_encode($data, JSON_UNESCAPED_UNICODE); ?>,
+            even: true
+        });
+    });
+</script>
+
+@include("footer")
