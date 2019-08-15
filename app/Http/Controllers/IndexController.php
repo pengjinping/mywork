@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Console\Commands\SummaryDayCommand;
 use App\Console\Commands\SummaryRunCommand;
+use App\Helpers\Validate;
 use App\Models\Channel;
 use App\Models\ChannelList;
 use Illuminate\Http\Request;
+use JsonSchema\Validator;
 
 class IndexController extends Controller
 {
 	/**
 	 * 获取投资渠道信息
 	 */
-    public function index()
+    public function index(Request $request)
     {
         //(new SummaryRunCommand())->handle();
         //(new SummaryDayCommand())->handle();
-
 	    $dataList = Channel::getList();
 	    
         return view('index.index', ['data' => $dataList]);
