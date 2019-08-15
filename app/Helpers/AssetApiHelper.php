@@ -29,7 +29,7 @@ class AssetApiHelper
      */
     public static function getInfoByCode($code, $type)
     {
-        if (in_array($type, self::$TYPE_MAP)) {
+        if (isset(self::$TYPE_MAP[$type])) {
             $type = 'get' . ucfirst($type);
 
             return self::$type($code);

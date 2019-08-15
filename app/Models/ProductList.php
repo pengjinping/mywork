@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\AssetApiHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,7 @@ class ProductList extends Model
 {
     protected $table = "product_list";
 
-    protected $fillable = ['channel_id', 'code', 'type', 'amount', 'part', 'hand', 'change_after', 'date'];
+    protected $fillable = ['product_id', 'type', 'amount', 'part', 'hand', 'change_after', 'date'];
 
 	const TYPE_IN  = 1; //购买
 	const TYPE_OUT = 0; //赎回
@@ -27,10 +28,9 @@ class ProductList extends Model
 		self::TYPE_OUT => '赎回'
 	];
 
-    public static function getList($code, $id)
+    public static function getListByProduct($productId)
     {
-        $query = static::query()->where(['code' => $code]);
-        //$id && $query->where("channel_id", $id);
+        $query = static::query()->where(['product_id' => $productId]);
 
         return $query->orderBy('id', 'desc')->get()->toArray();
     }
@@ -39,35 +39,40 @@ class ProductList extends Model
 	 * 创建一个记录新
 	 *
 	 * @param $params
+     * @return mixed
 	 */
 	public static function createOne( $params )
 	{
         try {
-
-            $channel = Channel::findOrFail($params['channel_id']);
-            $product = Product::getOneByCode($params['code']);
-
+            $product = Product::findOrFail($params['product_id']);
+            $channel = Channel::findOrFail($product['group_id']);
             if ($params['part'] == 0 && $product['price']) {
                 $params['part'] = round($params['amount'] / $product['price'], 4);
             }
+            if ($params['hand'] == 0 && $product['type'] == AssetApiHelper::TYPE_STOCK) {
+                $params['hand'] = 5 + round($params['amount'] / 10000, 2);
+                if ($params['type'] == static::TYPE_OUT) {
+                    $params['hand'] += round($params['amount'] * 0.001, 2);
+                }
+            }
 
             if ($params['type'] == static::TYPE_IN) {
-                $channel['balance']  = $channel['balance'] - $params['amount'] - $params['hand'];
-                $product['amount']   += $params['amount'];
-                $product['part']     += $params['part'];
-                $product['yestoday'] += $params['yesterday'] ? : $params['amount'];
+                $channel['balance']   = $channel['balance'] - $params['amount'] - $params['hand'];
+                $product['amount']    += $params['amount'];
+                $product['part']      += $params['part'];
+                $product['yesterday'] += $params['yesterday'] ? : $params['amount'];
             } else {
                 $channel['balance']  = $channel['balance'] + $params['amount'] - $params['hand'];
                 $product['amount']   -= $params['amount'];
                 $product['part']     -= $params['part'];
-                $product['yestoday'] -= $params['yesterday'] ? : $params['amount'];
+                $product['yesterday'] -= $params['yesterday'] ? : $params['amount'];
             }
             $product['market'] = $product['part'] * $product['price'];
 
 			$params['change_after'] = $product['amount'];
 			$params['date'] = date('Y-m-d');
 
-            unset($params['_token'], $params['channel_id'], $params['yesterday']);
+            unset($params['_token'], $params['yesterday']);
             $dataSer = new static();
             $dataSer->fill($params);
 
@@ -76,7 +81,8 @@ class ProductList extends Model
                 $dataSer->save();
                 $product->save();
             });
-			
+
+			return $product['group_id'];
 		}catch (\Throwable $ex){
 			dd($ex);
 		}

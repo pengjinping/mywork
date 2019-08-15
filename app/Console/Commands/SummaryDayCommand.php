@@ -48,10 +48,10 @@ class SummaryDayCommand extends Command
         $productData = Product::query()->where('part', '>', 0)->get();
 
         foreach ($productData as $item) {
-	        $item->yestoday = $item->part * $item->yprice;
+	        $item->yesterday = $item->part * $item->price;
 	        $item->save();
-	        
-            ProductLog::createOne($item['code'], $oldDate, $item->yestoday);
+
+            ProductLog::createOne($item['code'], $oldDate, $item->yesterday);
         }
     }
 }

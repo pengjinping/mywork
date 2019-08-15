@@ -2,8 +2,7 @@
 <br />
 <form class="layui-form" action="/product/addList" method="post">
     @csrf
-    <input type="hidden" name="channel_id" value="{{ @$product['channel_id'] }}" />
-    <input type="hidden" name="code" value="{{ @$product['code'] }}" />
+    <input type="hidden" name="product_id" value="{{ @$product['id'] }}" />
 
     <div class="layui-form-item">
         <div class="layui-inline">

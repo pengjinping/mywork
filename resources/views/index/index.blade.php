@@ -1,5 +1,12 @@
 @include("header")
 
+<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+    <div>
+        <button type="button" class="layui-btn" onclick="window.location.href='/refresh'">刷新统计</button>
+        <button type="button" class="layui-btn" onclick="window.location.href='/refreshFund'">更新基金值</button>
+    </div>
+</fieldset>
+<br />
 <table class="layui-hide" id="channelList"></table>
 
 <script type="text/javascript">
@@ -21,6 +28,8 @@
                 {field: 'profit', title: '盈亏', sort: true, totalRow: true},
                 {field: 'rate', title: '盈亏率(%)'},
                 {field: 'today', title: '日盈亏', sort: true, totalRow: true},
+                {field: 'week', title: '周盈亏', sort: true, totalRow: true},
+                {field: 'month', title: '月盈亏', sort: true, totalRow: true},
                 {
                     field: 'id', title: '操作', templet: function (res) {
                         return '<a href="/product/' + res.id + '">明细</a> | ' +
