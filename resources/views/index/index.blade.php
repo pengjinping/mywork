@@ -20,7 +20,7 @@
             totalRow: true,
             cols: [[ //标题栏
                 //{field: 'id', title: 'ID', width: 80, sort: true},
-                {field: 'name', title: '名称', width: 100, totalRowText: '合计'},
+                {field: 'name', title: '名称', width: 105, totalRowText: '合计'},
                 {field: 'capital', title: '本金', sort: true, totalRow: true},
                 {field: 'balance', title: '余额', totalRow: true},
                 {field: 'market', title: '市值', sort: true, totalRow: true},
