@@ -60,7 +60,7 @@ class ProductList extends Model
                 $channel['balance']  = $channel['balance'] + $params['amount'] - $params['hand'];
                 $product['amount']   -= $params['amount'];
                 $product['part']     -= $params['part'];
-                $product['yestoday'] += $params['yesterday'] ? : $params['amount'];
+                $product['yestoday'] -= $params['yesterday'] ? : $params['amount'];
             }
             $product['market'] = $product['part'] * $product['price'];
 
