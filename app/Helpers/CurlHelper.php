@@ -27,9 +27,9 @@ class CurlHelper
 
     public static function getStock($code)
     {
-        $result = self::makeStockUrl($code, 1);
+        $result = self::makeStockUrl($code, 2);
         if ($result == null || !isset($result['name'])) {
-            $result = self::makeStockUrl($code, 2);
+            $result = self::makeStockUrl($code, 1);
         }
 
         $res['name']   = $result['name'];

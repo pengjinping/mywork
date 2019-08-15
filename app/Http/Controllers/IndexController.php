@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Console\Commands\SummaryDayCommand;
 use App\Console\Commands\SummaryRunCommand;
+use App\Helpers\AssetApiHelper;
 use App\Models\Channel;
 use App\Models\ChannelList;
 use Illuminate\Http\Request;
@@ -15,6 +16,11 @@ class IndexController extends Controller
 	 */
     public function index()
     {
+
+        $res = AssetApiHelper::getFundToday('161725');
+        print_r($res);
+        dd('1');
+
         //(new SummaryRunCommand())->handle();
         //(new SummaryDayCommand())->handle();
 
