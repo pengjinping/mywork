@@ -42,8 +42,8 @@
             title: '资产资产信息',
             totalRow: true,
             cols: [[ //标题栏
-                {field: 'code', title: '代码', width: 80, sort: true, totalRowText: '合计'},
-                {field: 'name', title: '名称', width: 200},
+                {field: 'code', title: '代码', width: 78, sort: true, totalRowText: '合计'},
+                {field: 'name', title: '名称', width: 120},
                 {field: 'amount', title: '本金', sort: true, totalRow: true},
                 {field: 'part', title: '份额'},
                 {field: 'price', title: '单价', sort: true},
