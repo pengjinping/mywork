@@ -22,7 +22,7 @@ class ChannelList extends Model
 {
     protected $table = 'channel_list';
 
-    protected $fillable = ['channel_id', 'type', 'amount', 'change_after', 'date'];
+    protected $fillable = ['group_id', 'type', 'amount', 'change_after', 'date'];
 	
 	const TYPE_IN  = 1; //充值
 	const TYPE_OUT = 0; //取出
@@ -42,17 +42,17 @@ class ChannelList extends Model
 		try{
 		    unset($params['_token']);
 
-			$channel = Channel::findOrFail( $params['channel_id'] );
-			
-			if ( $params['type'] == static::TYPE_IN ) {
-				$channel['go_in']   += $params['amount'];
-				$channel['capital'] += $params['amount'];
-				$channel['balance'] += $params['amount'];
-			} else {
-				$channel['go_out']  += $params['amount'];
-				$channel['capital'] -= $params['amount'];
-				$channel['balance'] -= $params['amount'];
-			}
+			$channel = Channel::findOrFail( $params['group_id'] );
+
+            if ($params['type'] == static::TYPE_IN) {
+                $channel['roll_in'] += $params['amount'];
+                $channel['capital'] += $params['amount'];
+                $channel['balance'] += $params['amount'];
+            } else {
+                $channel['roll_out'] += $params['amount'];
+                $channel['capital']  -= $params['amount'];
+                $channel['balance']  -= $params['amount'];
+            }
 			
 			$params['change_after'] = $channel['capital'];
 			$params['date'] = date('Y-m-d');

@@ -25,5 +25,10 @@ class DBHelper
 			}
 		} );
 	}
+
+    public static function batchUpdate()
+    {
+
+    }
 	
 }
