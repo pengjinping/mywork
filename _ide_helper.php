@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.8.31 on 2019-08-08 07:14:33.
+ * Generated for Laravel 5.8.31 on 2019-08-16 15:15:48.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -14570,6 +14570,302 @@ namespace Illuminate\Support {
  
 }
 
+namespace Arcanedev\LogViewer\Facades { 
+
+    /**
+     * Class     LogViewer
+     *
+     * @package Arcanedev\LogViewer\Facades
+     * @author ARCANEDEV <arcanedev.maroc@gmail.com>
+     */ 
+    class LogViewer {
+        
+        /**
+         * Get the log levels.
+         *
+         * @param bool $flip
+         * @return array 
+         * @static 
+         */ 
+        public static function levels($flip = false)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->levels($flip);
+        }
+        
+        /**
+         * Get the translated log levels.
+         *
+         * @param string|null $locale
+         * @return array 
+         * @static 
+         */ 
+        public static function levelsNames($locale = null)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->levelsNames($locale);
+        }
+        
+        /**
+         * Set the log storage path.
+         *
+         * @param string $path
+         * @return self 
+         * @static 
+         */ 
+        public static function setPath($path)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->setPath($path);
+        }
+        
+        /**
+         * Get the log pattern.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getPattern()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->getPattern();
+        }
+        
+        /**
+         * Set the log pattern.
+         *
+         * @param string $date
+         * @param string $prefix
+         * @param string $extension
+         * @return self 
+         * @static 
+         */ 
+        public static function setPattern($prefix = 'laravel-', $date = '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]', $extension = '.log')
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->setPattern($prefix, $date, $extension);
+        }
+        
+        /**
+         * Get all logs.
+         *
+         * @return \Arcanedev\LogViewer\Entities\LogCollection 
+         * @static 
+         */ 
+        public static function all()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->all();
+        }
+        
+        /**
+         * Paginate all logs.
+         *
+         * @param int $perPage
+         * @return \Illuminate\Pagination\LengthAwarePaginator 
+         * @static 
+         */ 
+        public static function paginate($perPage = 30)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->paginate($perPage);
+        }
+        
+        /**
+         * Get a log.
+         *
+         * @param string $date
+         * @return \Arcanedev\LogViewer\Entities\Log 
+         * @static 
+         */ 
+        public static function get($date)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->get($date);
+        }
+        
+        /**
+         * Get the log entries.
+         *
+         * @param string $date
+         * @param string $level
+         * @return \Arcanedev\LogViewer\Entities\LogEntryCollection 
+         * @static 
+         */ 
+        public static function entries($date, $level = 'all')
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->entries($date, $level);
+        }
+        
+        /**
+         * Download a log file.
+         *
+         * @param string $date
+         * @param string|null $filename
+         * @param array $headers
+         * @return \Symfony\Component\HttpFoundation\BinaryFileResponse 
+         * @static 
+         */ 
+        public static function download($date, $filename = null, $headers = array())
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->download($date, $filename, $headers);
+        }
+        
+        /**
+         * Get logs statistics.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function stats()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->stats();
+        }
+        
+        /**
+         * Get logs statistics table.
+         *
+         * @param string|null $locale
+         * @return \Arcanedev\LogViewer\Tables\StatsTable 
+         * @static 
+         */ 
+        public static function statsTable($locale = null)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->statsTable($locale);
+        }
+        
+        /**
+         * Delete the log.
+         *
+         * @param string $date
+         * @return bool 
+         * @static 
+         */ 
+        public static function delete($date)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->delete($date);
+        }
+        
+        /**
+         * Clear the log files.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function clear()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->clear();
+        }
+        
+        /**
+         * Get all valid log files.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function files()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->files();
+        }
+        
+        /**
+         * List the log files (only dates).
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function dates()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->dates();
+        }
+        
+        /**
+         * Get logs count.
+         *
+         * @return int 
+         * @static 
+         */ 
+        public static function count()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->count();
+        }
+        
+        /**
+         * Get entries total from all logs.
+         *
+         * @param string $level
+         * @return int 
+         * @static 
+         */ 
+        public static function total($level = 'all')
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->total($level);
+        }
+        
+        /**
+         * Get logs tree.
+         *
+         * @param bool $trans
+         * @return array 
+         * @static 
+         */ 
+        public static function tree($trans = false)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->tree($trans);
+        }
+        
+        /**
+         * Get logs menu.
+         *
+         * @param bool $trans
+         * @return array 
+         * @static 
+         */ 
+        public static function menu($trans = true)
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->menu($trans);
+        }
+        
+        /**
+         * Determine if the log folder is empty or not.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function isEmpty()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->isEmpty();
+        }
+        
+        /**
+         * Get the LogViewer version.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function version()
+        {
+                        /** @var \Arcanedev\LogViewer\LogViewer $instance */
+                        return $instance->version();
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -17350,6 +17646,8 @@ namespace  {
     class Validator extends \Illuminate\Support\Facades\Validator {}
 
     class View extends \Illuminate\Support\Facades\View {}
+
+    class LogViewer extends \Arcanedev\LogViewer\Facades\LogViewer {}
  
 }
 
