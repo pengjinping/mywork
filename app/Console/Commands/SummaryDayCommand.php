@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Channel;
 use App\Models\Product;
 use App\Models\ProductLog;
 use Illuminate\Console\Command;
@@ -52,6 +53,19 @@ class SummaryDayCommand extends Command
 	        $item->save();
 
             ProductLog::createOne($item['code'], $oldDate, $item->yesterday);
+        }
+
+        if (date('w') == 1) {
+            $query = Product::query()->groupBy("group_id");
+            $query->selectRaw("sum(yesterday) as week, group_id");
+
+            $dataList = $query->get()->toArray();
+
+            foreach ($dataList as $item) {
+                $id = $item['group_id'];
+                unset($item['group_id']);
+                Channel::where("id", $id)->update($item);
+            }
         }
     }
 }
