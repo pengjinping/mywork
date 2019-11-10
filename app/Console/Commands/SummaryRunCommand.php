@@ -34,14 +34,9 @@ class SummaryRunCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
-        $dataList = Product::getList();
+        $dataList = Product::getFundList('');
         foreach ($dataList as $item) {
             $resData               = AssetApiHelper::getInfoByCode($item['code'], $item['type']);
             $item->market          = $resData['price'] * $item->part;

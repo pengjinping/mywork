@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\DB;
  * @property string $channel_id
  * @property string $code
  * @property string $name
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Product query()
  * @mixin \Eloquent
  */
 class Product extends Model
@@ -41,40 +38,33 @@ class Product extends Model
     /**
      * 获取有效资产数据
      *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     */
-    public static function getList()
-    {
-        $yesterday = date("Y-m-d", strtotime("-1 day"));
-
-        return Product::query()->where('part', '>', 0)->orWhere('updated_at', '>', $yesterday)->get();
-    }
-
-    /**
-     * 获取有效资产数据
+     * @param $type
      *
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public static function getFundList()
+    public static function getFundList($type)
     {
         $yesterday = date("Y-m-d", strtotime("-1 day"));
-        $query     = Product::query()->where("type", AssetApiHelper::TYPE_FUND);
+
+        $query = Product::query();
         $query->where(function ($q) use ($yesterday) {
             $q->where('part', '>', 0)->orWhere('updated_at', '>', $yesterday);
         });
+
+        $type && $query->where("type", $type);
 
         return $query->get();
     }
 
     /**
-     * 按组统计市值与昨日价格
+     * 按组统计市值
      *
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public static function refreshSumByGroup()
     {
         $query = Product::query()->groupBy("group_id");
-        $query->selectRaw("sum(market) as market, sum(yesterday) as yesterday, group_id");
+        $query->selectRaw("sum(market) as market, group_id");
 
         $dataList = $query->get()->toArray();
 

@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Console\Commands\SummaryDayCommand;
 use App\Console\Commands\SummaryRunCommand;
 use App\Helpers\AssetApiHelper;
 use App\Models\Channel;
-use App\Models\ChannelList;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
@@ -18,7 +15,7 @@ class IndexController extends Controller
     public function index()
     {
 	    $dataList = Channel::getList();
-	    
+
         return view('index.index', ['data' => $dataList]);
     }
 
@@ -36,7 +33,7 @@ class IndexController extends Controller
      */
     public function refreshFund()
     {
-        $dataList = Product::getFundList();
+        $dataList = Product::getFundList(AssetApiHelper::TYPE_FUND);
         foreach ($dataList as $item) {
             $resData = AssetApiHelper::getFundToday($item['code']);
             if ($resData['price'] == $item['yesterday_price']) {
@@ -52,37 +49,5 @@ class IndexController extends Controller
 
         return $this->index();
     }
-	
-	/**
-	 * 添加转入转出记录
-	 *
-	 * @param $id
-	 *
-	 * @return mixed
-	 */
-	public function addForm( $id )
-	{
-		try {
-			$channel = Channel::findOrFail( $id );
-			
-			return view( 'index.form', ['data' => $channel] );
-		} catch ( \Throwable $ex ) {
-			dd( $ex );
-		}
-	}
-	
-	/**
-	 * 添加转入转出记录
-	 *
-	 * @param Request $request
-	 *
-	 * @return mixed
-	 */
-	public function addList( Request $request )
-	{
-		ChannelList::createOne( $request->all() );
-		
-		return redirect( '/' );
-	}
  
 }

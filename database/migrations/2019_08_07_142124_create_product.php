@@ -28,18 +28,6 @@ class CreateProduct extends Migration
 	              ->comment( '更新时间' );
         });
 	    DB::statement( "ALTER TABLE `transfer` comment '资产明细'" );
-	
-	    Schema::create('product_trade', function (Blueprint $table) {
-		    $table->bigIncrements('id');
-		    $table->integer('product_id')->comment('资产ID');
-		    $table->tinyInteger('type')->comment('类型：1购买 2赎回');
-		    $table->decimal('amount')->comment('金额');
-		    $table->decimal('part')->comment('份额');
-		    $table->decimal('hand')->comment('手续费');
-		    $table->decimal('change_after')->comment('交易后本金');
-		    $table->timestamp( 'created_at' )->useCurrent()->comment( '创建时间' );
-	    });
-	    DB::statement( "ALTER TABLE `transfer` comment '资产交易记录'" );
     }
 
     /**
@@ -50,6 +38,5 @@ class CreateProduct extends Migration
     public function down()
     {
         Schema::dropIfExists('product');
-	    Schema::dropIfExists('product_trade');
     }
 }

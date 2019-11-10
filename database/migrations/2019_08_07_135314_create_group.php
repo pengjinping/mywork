@@ -17,8 +17,6 @@ class CreateGroup extends Migration
 	    Schema::create( 'group', function ( Blueprint $table ) {
 		    $table->bigIncrements( 'id' );
 		    $table->string( "name", 32 )->nullable( false )->default( "" )->comment( '名称' );
-		    $table->decimal( 'roll_in' )->nullable( false )->default( 0 )->comment( '转入' );
-		    $table->decimal( 'roll_out' )->nullable( false )->default( 0 )->comment( '转出' );
 		    $table->decimal( 'capital' )->nullable( false )->default( 0 )->comment( '本金' );
 		    $table->decimal( 'balance' )->nullable( false )->default( 0 )->comment( '余额' );
 		    $table->decimal( 'market' )->nullable( false )->default( 0 )->comment( '市值' );

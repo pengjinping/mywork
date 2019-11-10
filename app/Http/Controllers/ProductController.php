@@ -34,36 +34,4 @@ class ProductController extends Controller
 
         return redirect('/product/' . $params['group_id']);
     }
-
-    public function list($id)
-    {
-        try {
-            $product = Product::find($id);
-
-            $dataList = ProductList::getListByProduct($id);
-            foreach ($dataList as &$item) {
-                $item['type_name'] = ProductList::$TYPE_MAP[$item['type']];
-            }
-
-            return view('product.list', ['data' => $dataList, 'product' => $product]);
-        } catch (\Throwable $ex) {
-            dd($ex);
-        }
-    }
-
-    /**
-     * 添加转入转出记录
-     *
-     * @param Request $request
-     *
-     * @return mixed
-     */
-    public function addList(Request $request)
-    {
-        $params  = $request->all();
-        $groupId = ProductList::createOne($params);
-
-        return redirect('/product/' . $groupId);
-    }
-	
 }

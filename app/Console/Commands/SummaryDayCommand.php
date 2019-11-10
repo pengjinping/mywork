@@ -6,6 +6,7 @@ use App\Models\Channel;
 use App\Models\Product;
 use App\Models\ProductLog;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class SummaryDayCommand extends Command
 {
@@ -14,7 +15,8 @@ class SummaryDayCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'summary:day';
+    protected $signature = 'summary:day 
+                            {--date= : 统计日期}';
 
     /**
      * The console command description.
@@ -40,32 +42,22 @@ class SummaryDayCommand extends Command
      */
     public function handle()
     {
-        if (in_array(date('w'), [0, 6])) {
-            return false;
+        $channel = Channel::$tableName;
+        $date    = $this->option('date') ? : date("Y-m-d");
+
+        $week = date("w", strtotime($date));
+        $day  = date("d", strtotime($date));
+
+        // 每天更新数据[工作日]
+        if (!in_array($week, [0, 6])) {
+            DB::statement("update `{$channel}` set `yesterday`=`balance`+`market`");
         }
 
-        // 获取资产数据
-        $oldDate     = date("Y-m-d", strtotime("-1 day"));
-        $productData = Product::query()->where('part', '>', 0)->get();
+        // 每周一 刷新周统计
+        $week == 1 && DB::statement("update `{$channel}` set `week`=`balance`+`market`");
 
-        foreach ($productData as $item) {
-	        $item->yesterday = $item->part * $item->price;
-	        $item->save();
+        // 每月1号 刷新周统计
+        $day == 1 && DB::statement("update `{$channel}` set `month`=`balance`+`market`");
 
-            ProductLog::createOne($item['code'], $oldDate, $item->yesterday);
-        }
-
-        if (date('w') == 1) {
-            $query = Product::query()->groupBy("group_id");
-            $query->selectRaw("sum(yesterday) as week, group_id");
-
-            $dataList = $query->get()->toArray();
-
-            foreach ($dataList as $item) {
-                $id = $item['group_id'];
-                unset($item['group_id']);
-                Channel::where("id", $id)->update($item);
-            }
-        }
     }
 }

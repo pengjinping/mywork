@@ -51,12 +51,7 @@
                 {field: 'profit', title: '盈亏', sort: true, totalRow: true},
                 {field: 'rate', title: '盈亏率(%)'},
                 {field: 'profit_today', title: '日盈亏', sort: true, totalRow: true},
-                {field: 'rate_today', title: '日盈亏率(%)'},
-                {
-                    field: 'id', title: '操作', templet: function (res) {
-                        return '<a href="/product/list/' + res.id +'">明细</a>';
-                    }
-                },
+                {field: 'rate_today', title: '日盈亏率(%)'}
             ]],
             data: <?php echo json_encode($data, JSON_UNESCAPED_UNICODE); ?>,
             even: true,
