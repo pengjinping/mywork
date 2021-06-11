@@ -6,7 +6,7 @@ FROM registry.cn-huhehaote.aliyuncs.com/pengjinping/php7.2
 
 # Copy existing application directory contents
 COPY . /var/www/html
-COPY ./deploy/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/
+#COPY ./deploy/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/
 RUN chmod a+w -R /var/www/html/storage /var/www/html/bootstrap/cache \
     && rm /usr/local/etc/php-fpm.d/zz-docker.conf
 
