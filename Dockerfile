@@ -21,4 +21,4 @@ RUN chmod a+w -R /var/www/html/storage /var/www/html/bootstrap/cache \
 #CMD ["php-fpm"]
 #CMD ["php-fpm", "--nodaemonize"]
 
-#ENTRYPOINT ["/var/www/html/init.sh"]
+ENTRYPOINT ["/usr/sbin/nginx"]
