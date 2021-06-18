@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Channel extends Model
 {
-    public static $tableName = 'channel';
-    protected     $table     = 'channel';
+    public static $tableName = 'group';
+    protected     $table     = 'group';
 	
 	public static function getList()
 	{

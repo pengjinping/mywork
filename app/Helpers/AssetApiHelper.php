@@ -5,16 +5,17 @@
 
 namespace App\Helpers;
 
-class AssetApiHelper
-{
+class AssetApiHelper {
     const TYPE_STOCK      = 'stock'; // 股票
     const TYPE_FUND       = 'fund'; // 基金
+    const TYPE_ETF        = 'etf'; // 基金
     const TYPE_CURRENCY_1 = 'currency1'; // 货币基金
     const TYPE_CURRENCY_2 = 'currency2'; // 货币基金2
 
     public static $TYPE_MAP = [
         self::TYPE_STOCK      => '股票',
         self::TYPE_FUND       => '基金',
+        self::TYPE_ETF        => 'ETF',
         self::TYPE_CURRENCY_1 => '货币基金1',
         self::TYPE_CURRENCY_2 => '货币基金2',
     ];
@@ -27,8 +28,7 @@ class AssetApiHelper
      *
      * @return mixed
      */
-    public static function getInfoByCode($code, $type)
-    {
+    public static function getInfoByCode($code, $type) {
         if (isset(self::$TYPE_MAP[$type])) {
             $type = 'get' . ucfirst($type);
 
@@ -43,8 +43,7 @@ class AssetApiHelper
      *
      * @return mixed
      */
-    public static function getStock($code)
-    {
+    public static function getStock($code) {
         $result = self::makeStockUrl($code, 2);
         if ($result == null || !isset($result['name'])) {
             $result = self::makeStockUrl($code, 1);
@@ -57,8 +56,7 @@ class AssetApiHelper
         return $res;
     }
 
-    private static function makeStockUrl($code, $inx)
-    {
+    private static function makeStockUrl($code, $inx) {
         $url     = "http://pdfm.eastmoney.com/EM_UBG_PDTI_Fast/api/js?rtntype=5&cb=back&id={$code}{$inx}&type=r";
         $content = file_get_contents($url);
         $content = substr($content, 5, -1);
@@ -67,14 +65,49 @@ class AssetApiHelper
     }
 
     /**
+     * 获取股票信息
+     *
+     * @param $code
+     *
+     * @return mixed
+     */
+    public static function getEtf($code) {
+        $content     = self::getEtfCurl('https://hq.sinajs.cn/?list=sh' . $code);
+        $contentList = explode('"', $content);
+        if (empty($contentList[1])) {
+            $content     = self::getEtfCurl('https://hq.sinajs.cn/?list=sz' . $code);
+            $contentList = explode('"', $content);
+        }
+        $contentList = explode(',', $contentList[1]);
+
+        $res['name']            = $contentList[0];
+        $res['price']           = $contentList[3];
+        $res['yesterday_price'] = $contentList[2];
+
+        return $res;
+    }
+
+    private static function getEtfCurl($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return iconv('GBK', "UTF-8//IGNORE", $result);
+    }
+
+
+    /**
      * 获取基金信息
      *
      * @param $code
      *
      * @return mixed
      */
-    public static function getFund($code)
-    {
+    public static function getFund($code) {
         $url     = "http://fundgz.1234567.com.cn/js/{$code}.js";
         $content = file_get_contents($url);
         $content = substr($content, 8, -2);
@@ -94,8 +127,7 @@ class AssetApiHelper
      *
      * @return mixed
      */
-    public static function getFundToday($code)
-    {
+    public static function getFundToday($code) {
         $url      = "http://hq.sinajs.cn/?list=f_{$code}";
         $content  = file_get_contents($url);
         $content  = mb_convert_encoding($content, 'UTF-8', 'GBK');
@@ -110,12 +142,12 @@ class AssetApiHelper
 
     /**
      * 获取货币基金
+     *
      * @param $code
      *
      * @return mixed
      */
-    public static function getCurrency1($code = '')
-    {
+    public static function getCurrency1($code = '') {
         $res['code']            = $code;
         $res['name']            = "货币基金";
         $res['yesterday_price'] = "1";
@@ -126,12 +158,12 @@ class AssetApiHelper
 
     /**
      * 获取快快贷信息
+     *
      * @param $code
      *
      * @return mixed
      */
-    public static function getCurrency2($code = '')
-    {
+    public static function getCurrency2($code = '') {
         $res['code']            = $code;
         $res['name']            = "快快贷";
         $res['yesterday_price'] = "1";

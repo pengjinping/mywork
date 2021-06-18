@@ -18,7 +18,7 @@ class CreateProduct extends Migration
 	        $table->integer( 'group_id' )->nullable( false )->default( "" )->comment( '分组ID' );
 	        $table->string( 'code', 10 )->nullable()->default( '' )->comment( '资产编号' );
 	        $table->string( 'name', 32 )->nullable()->default( '' )->comment( '资产名称' );
-	        $table->string( 'type', 10 )->nullable()->default( '1' )->comment( '类型 stock股票 fund基金' );
+	        $table->string( 'type', 10 )->nullable()->default( '1' )->comment( '类型stock股票 fund基金 etf' );
 	        $table->decimal( 'amount' )->comment( '本金' );
 	        $table->decimal( 'part' )->comment( '份额' );
 	        $table->decimal( 'market' )->comment( '市值' );

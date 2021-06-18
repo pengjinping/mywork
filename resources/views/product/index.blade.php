@@ -17,6 +17,7 @@
             <div class="layui-input-block">
                 <select name="type" lay-filter="aihao">
                     <option value="stock">股票</option>
+                    <option value="etf">ETF</option>
                     <option value="fund">基金</option>
                     <option value="currency1">货币基金</option>
                     <option value="currency2">货币基金2</option>
@@ -48,10 +49,10 @@
                 {field: 'part', title: '份额'},
                 {field: 'price', title: '单价', sort: true},
                 {field: 'market', title: '市值', sort: true, totalRow: true},
-                {field: 'profit', title: '盈亏', sort: true, totalRow: true},
-                {field: 'rate', title: '盈亏率(%)'},
                 {field: 'profit_today', title: '日盈亏', sort: true, totalRow: true},
-                {field: 'rate_today', title: '日盈亏率(%)'}
+                {field: 'rate_today', title: '日盈亏率(%)'},
+                {field: 'profit', title: '盈亏', sort: true, totalRow: true},
+                {field: 'rate', title: '盈亏率(%)'}
             ]],
             data: <?php echo json_encode($data, JSON_UNESCAPED_UNICODE); ?>,
             even: true,
