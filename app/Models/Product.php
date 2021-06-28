@@ -32,7 +32,7 @@ class Product extends Model
         $query = static::query();
         $id && $query->where("group_id", $id);
 
-        return $query->get()->toArray();
+        return $query->orderBy('part', 'desc')->get()->toArray();
     }
 
     /**

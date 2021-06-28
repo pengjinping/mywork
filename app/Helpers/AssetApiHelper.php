@@ -96,9 +96,12 @@ class AssetApiHelper {
         $result = curl_exec($ch);
         curl_close($ch);
 
-        return iconv('GBK', "UTF-8//IGNORE", $result);
+        try{
+            return iconv("GBK", "UTF-8//IGNORE", $result);
+        }catch (\Exception $ex){
+            return $result;
+        }
     }
-
 
     /**
      * 获取基金信息

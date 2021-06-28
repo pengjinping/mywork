@@ -56,7 +56,7 @@ class SummaryDayCommand extends Command
         // 每周一 刷新周统计
         $week == 1 && DB::statement("update `{$channel}` set `week`=`balance`+`market`");
 
-        // 每月1号 刷新周统计
+        // 每月1号 刷新月统计
         $day == 1 && DB::statement("update `{$channel}` set `month`=`balance`+`market`");
 
     }
