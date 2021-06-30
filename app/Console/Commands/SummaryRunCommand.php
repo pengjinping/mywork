@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Helpers\AssetApiHelper;
-use App\Helpers\CurlHelper;
-use App\Models\Channel;
 use App\Models\Product;
 use Illuminate\Console\Command;
 
